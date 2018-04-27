@@ -1,15 +1,16 @@
+var path = require('path');
+
 var config = {
     entry: './index.js',
 
     output: {
-        path: '/',
+        path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js',
     },
 
     devServer: {
         inline: true,
         port: 7777,
-        // contentBase: 'static',
         proxy: {
             '/api/*': {
                 target: 'http://localhost:3000/',
