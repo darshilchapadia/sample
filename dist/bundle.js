@@ -9623,8 +9623,6 @@ var _jsonData2 = _interopRequireDefault(_jsonData);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -9648,7 +9646,6 @@ var Landing = function (_Component) {
 	_createClass(Landing, [{
 		key: 'render',
 		value: function render() {
-			debugger;
 			var self = this;
 			return _react2.default.createElement(
 				'div',
@@ -9656,10 +9653,7 @@ var Landing = function (_Component) {
 				_react2.default.createElement(
 					'div',
 					{ className: 'input-container' },
-					_react2.default.createElement('input', { type: 'text', placeholder: 'First Name', onChange: this.onFilterhange.bind(this, "fNameFilter") }),
-					_react2.default.createElement('input', { type: 'text', placeholder: 'Last Name', onChange: this.onFilterhange.bind(this, "lNameFilter") }),
-					_react2.default.createElement('input', { type: 'text', placeholder: 'Email', onChange: this.onFilterhange.bind(this, "emailFilter") }),
-					_react2.default.createElement('input', { type: 'text', placeholder: 'Agency', onChange: this.onFilterhange.bind(this, "agencyFilter") })
+					_react2.default.createElement('input', { type: 'text', placeholder: 'Filter', onChange: this.onFilterhange.bind(this, "filter") })
 				),
 				_react2.default.createElement(
 					'table',
@@ -9725,15 +9719,20 @@ var Landing = function (_Component) {
 		key: 'filterData',
 		value: function filterData(obj) {
 			var _$extend = _underscore2.default.extend({}, this.state, obj),
-			    fNameFilter = _$extend.fNameFilter,
-			    lNameFilter = _$extend.lNameFilter,
-			    emailFilter = _$extend.emailFilter,
-			    agencyFilter = _$extend.agencyFilter;
+			    filter = _$extend.filter;
 
 			this.filteredData = _underscore2.default.filter(_jsonData2.default, function (item) {
-				return item.firstname && fNameFilter && item.firstname.toLowerCase().includes(fNameFilter) || item.lastname && lNameFilter && item.lastname.toLowerCase().includes(lNameFilter) || item.email && emailFilter && item.email.toLowerCase().includes(emailFilter) || item.agency_name && agencyFilter && item.agency_name.toString().toLowerCase().includes(agencyFilter);
+				return _underscore2.default.some(item, function (dataItem) {
+					var test;
+					try {
+						test = dataItem && dataItem.toString().toLowerCase().includes(filter);
+					} catch (e) {
+						debugger;
+					}
+					return test;
+				});
 			});
-			if (!this.filteredData.length && !fNameFilter && !lNameFilter && !emailFilter && !agencyFilter) {
+			if (!this.filteredData.length && !filter) {
 				this.filteredData = _jsonData2.default;
 			}
 			this.setState(obj);
@@ -9741,7 +9740,7 @@ var Landing = function (_Component) {
 	}, {
 		key: 'onFilterhange',
 		value: function onFilterhange(filter, e) {
-			var obj = _defineProperty({}, filter, e.target.value.toLowerCase());
+			var obj = { filter: e.target.value.toLowerCase() };
 			this.debounceWrapper(obj);
 		}
 	}, {
